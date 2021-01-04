@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-      - name: Install Dependencies
+      - name: Lint affected
         run: npm affected:lint --base=origin/master
       - name: Test affected
         run: npm affected:test --base=origin/master
