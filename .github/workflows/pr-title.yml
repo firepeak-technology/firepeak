@@ -18,8 +18,3 @@ jobs:
           prefix_case_sensitive: false # title prefix are case insensitive
           min_length: 5 # Min length of the title
           max_length: 100 # Max length of the title
-      - uses: actions/labeler@main
-        with:
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          sync-labels: true
-
