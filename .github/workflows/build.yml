@@ -13,11 +13,29 @@ env:
   NX_CACHE: cache-nx
 
 jobs:
+  triage:
+    name: Check for PR title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: '(feat|feature|chore|fix|release)\((all|planning|flex)\): \w+' # Regex the title should match.
+          allowed_prefixes: 'feat,feature,stable,fix,chore' # title should start with the given prefix
+          prefix_case_sensitive: false # title prefix are case insensitive
+          min_length: 5 # Min length of the title
+          max_length: 100 # Max length of the title
+      - uses: actions/labeler@main
+        with:
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          sync-labels: true
 
   install-deps:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
       - name: Cache node modules
         id: cache
         uses: actions/cache@v2
@@ -28,66 +46,34 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --pure-lockfile
 
-  format:
+  build:
     runs-on: ubuntu-latest
     needs: install-deps
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
       - name: Cache node modules
         uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
       - run: git fetch --no-tags --prune --depth=5 origin master
-      - run: echo "GITHUB_BASE_SHA=$([[ "$GITHUB_REF" == "refs/origin/master" ]] && echo "origin/master~1" || echo "origin/master")" >> $GITHUB_ENV
-      - run: node --max-old-space-size=8000 ./node_modules/@nrwl/cli/bin/nx.js format:check --base=$GITHUB_BASE_SHA
+      - run: yarn affected:build --base=origin/master --prod --parallel
 
-  distributed-task:
+  lint:
     runs-on: ubuntu-latest
     needs: install-deps
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ['lint', 'test', 'build', 'e2e']
-        index: [1, 2, 3, 4]
-    env:
-      count: 4
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
       - name: Cache node modules
         uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
-      - name: Cache Nx
-        uses: actions/cache@v2
-        with:
-          path: node_modules/.cache/nx
-          key: ${{ env.NX_CACHE }}-${{ hashFiles('yarn.lock') }}-${{ matrix.target }}-${{ matrix.index }}-${{ github.sha }}
-          restore-keys: |
-            ${{ env.NX_CACHE }}-${{ hashFiles('yarn.lock') }}-${{ matrix.target }}-${{ matrix.index }}-
-            ${{ env.NX_CACHE }}-${{ hashFiles('yarn.lock') }}-
-            ${{ env.NX_CACHE }}-
-      - name: Cache Cypress
-        uses: actions/cache@v2
-        if: matrix.target == 'e2e'
-        with:
-          path: ${{ env.CYPRESS_CACHE_FOLDER }}
-          key: ${{ env.CYPRESS_CACHE }}
       - run: git fetch --no-tags --prune --depth=5 origin master
-      - name: Compute Nx arguments
-        if: matrix.target == 'build' || matrix.target == 'e2e'
-        run: echo "NX_ARGUMENTS=--prod" >> $GITHUB_ENV
-      - name: nx run-many:${{ matrix.target }}
-        if: matrix.target != 'e2e'
-        run: node ./tools/scripts/run-many.js ${{ matrix.target }} ${{ matrix.index }} ${{ env.count }} $GITHUB_REF $NX_ARGUMENTS
-      - name: nx run-many:e2e
-        if: matrix.target == 'e2e'
-        uses: cypress-io/github-action@v2
-        with:
-          command: node ./tools/scripts/run-many.js ${{ matrix.target }} ${{ matrix.index }} ${{ env.count }} $GITHUB_REF $NX_ARGUMENTS
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.BUILD_ARTIFACTS }}
-          path: dist
+      - run: yarn affected:lint --base=origin/master --parallel
