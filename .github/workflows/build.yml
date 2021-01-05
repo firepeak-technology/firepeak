@@ -5,32 +5,89 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+env:
+  BUILD_ARTIFACTS: dist-artifacts
+  CYPRESS_CACHE: cache-cypress
+  CYPRESS_CACHE_FOLDER: cache/Cypress
+  DEPENDENCIES_CACHE: cache-node-modules
+  NX_CACHE: cache-nx
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
 
+  install-deps:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
+      - name: yarn install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --pure-lockfile
 
+  format:
+    runs-on: ubuntu-latest
+    needs: install-deps
+    steps:
+      - uses: actions/checkout@v2
       - name: Cache node modules
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          path: node_modules
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
+      - run: git fetch --no-tags --prune --depth=5 origin master
+      - run: echo "GITHUB_BASE_SHA=$([[ "$GITHUB_REF" == "refs/origin/master" ]] && echo "origin/master~1" || echo "origin/master")" >> $GITHUB_ENV
+      - run: node --max-old-space-size=8000 ./node_modules/@nrwl/cli/bin/nx.js format:check --base=$GITHUB_BASE_SHA
 
-      - name: Install Dependencies
-        run: yarn install
-      - name: Lint affected
-        run: yarn affected:lint --base=origin/master --parallel
-      - name: Test affected
-        run: yarn affected:test --base=origin/master --parallel
-      - name: Build affected
-        run: yarn affected:build --prod --base=origin/master --parallel
+  distributed-task:
+    runs-on: ubuntu-latest
+    needs: install-deps
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ['lint', 'test', 'build', 'e2e']
+        index: [1, 2, 3, 4]
+    env:
+      count: 4
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('yarn.lock') }}
+      - name: Cache Nx
+        uses: actions/cache@v2
+        with:
+          path: node_modules/.cache/nx
+          key: ${{ env.NX_CACHE }}-${{ hashFiles('yarn.lock') }}-${{ matrix.target }}-${{ matrix.index }}-${{ github.sha }}
+          restore-keys: |
+            ${{ env.NX_CACHE }}-${{ hashFiles('yarn.lock') }}-${{ matrix.target }}-${{ matrix.index }}-
+            ${{ env.NX_CACHE }}-${{ hashFiles('yarn.lock') }}-
+            ${{ env.NX_CACHE }}-
+      - name: Cache Cypress
+        uses: actions/cache@v2
+        if: matrix.target == 'e2e'
+        with:
+          path: ${{ env.CYPRESS_CACHE_FOLDER }}
+          key: ${{ env.CYPRESS_CACHE }}
+      - run: git fetch --no-tags --prune --depth=5 origin master
+      - name: Compute Nx arguments
+        if: matrix.target == 'build' || matrix.target == 'e2e'
+        run: echo "NX_ARGUMENTS=--prod" >> $GITHUB_ENV
+      - name: nx run-many:${{ matrix.target }}
+        if: matrix.target != 'e2e'
+        run: node ./tools/scripts/run-many.js ${{ matrix.target }} ${{ matrix.index }} ${{ env.count }} $GITHUB_REF $NX_ARGUMENTS
+      - name: nx run-many:e2e
+        if: matrix.target == 'e2e'
+        uses: cypress-io/github-action@v2
+        with:
+          command: node ./tools/scripts/run-many.js ${{ matrix.target }} ${{ matrix.index }} ${{ env.count }} $GITHUB_REF $NX_ARGUMENTS
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.BUILD_ARTIFACTS }}
+          path: dist
