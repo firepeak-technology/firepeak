@@ -151,7 +151,12 @@
     }
   },
   "cli": {
-    "defaultCollection": "@nrwl/angular"
+    "defaultCollection": "@nrwl/angular",
+    "packageManager": "yarn",
+    "warnings": {
+      "typescriptMismatch": false,
+      "versionMismatch": false
+    }
   },
   "schematics": {
     "@nrwl/angular": {
