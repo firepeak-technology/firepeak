@@ -28,9 +28,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-      - name: Lint affected
+      - name: Lint affected 
         run: npm run affected:lint --base=master --parallel
       - name: Test affected
         run: npm run affected:test --base=master --parallel
       - name: Build affected
-        run: npm run affected:build --prod --base=master --parallel
+        run: npm run affected:build --prod --base=master --parallel 
