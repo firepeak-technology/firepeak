@@ -111,10 +111,52 @@
           }
         }
       }
+    },
+    "rxjs": {
+      "projectType": "library",
+      "root": "libs/rxjs",
+      "sourceRoot": "libs/rxjs/src",
+      "prefix": "firepeak",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/rxjs/tsconfig.lib.json",
+            "project": "libs/rxjs/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/rxjs/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/rxjs/src/**/*.ts",
+              "libs/rxjs/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/rxjs"],
+          "options": {
+            "jestConfig": "libs/rxjs/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
-    "defaultCollection": "@nrwl/angular"
+    "defaultCollection": "@nrwl/angular",
+    "packageManager": "yarn",
+    "warnings": {
+      "typescriptMismatch": false,
+      "versionMismatch": false
+    }
   },
   "schematics": {
     "@nrwl/angular": {
