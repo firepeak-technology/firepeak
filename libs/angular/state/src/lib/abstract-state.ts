@@ -39,6 +39,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   private readonly state = makeState<State<Item>>(INITIALSTATE());
 
   private readonly loadEffects$: Observable<unknown>;
+  private readonly data$ = this.state.select('data');
   protected destroy$ = new Subject<void>();
 
   protected abstract clearCurrentValue(): void;
@@ -82,7 +83,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
 
 
   public initialize() {
-    this.initCollectiion();
+    this.initCollection();
   }
 
   public load() {
@@ -174,7 +175,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     return saved;
   }
 
-  protected initCollectiion() {
+  protected initCollection() {
     merge(this.loadEffects$).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
@@ -188,6 +189,11 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
 
   protected selectData<KEY extends keyof Item>(key: KEY): Observable<Item[KEY] | null> {
     return this.state.select(state => state['data'] ? state['data'][key] : null)
+  }
+
+
+  protected selectLoading<KEY extends keyof LoadingStatus>(key: KEY): Observable<boolean> {
+    return this.state.select(state => state['loading'][key])
   }
 
   protected updateData(data: Item | null) {
