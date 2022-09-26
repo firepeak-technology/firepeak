@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@fp-tools/angular-resize": ["libs/angular/resize/src/index.ts"]
-      "@fp-tools/angular-state": ["libs/angular/state/src/index.ts"]
+      "@fp-tools/angular-resize": ["libs/angular/resize/src/index.ts"],
+      "@fp-tools/angular-state": ["libs/angular/state/src/index.ts"],
       "@fp-tools/rxjs": ["libs/rxjs/utils/src/index.ts"]
     }
   },
