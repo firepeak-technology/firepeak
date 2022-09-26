@@ -53,7 +53,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   protected abstract deleteItem(item: ID): void;
 
   protected constructor(
-    protected readonly loggingService: LoggingService,
+    protected readonly loggingService?: LoggingService,
     protected readonly snackbarService?: SnackbarService,
   ) {
 
@@ -118,7 +118,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     if ('error' in saved) {
       const {error} = saved
       this.sendMessage(this.createErrorNotify(partialData), true);
-      this.loggingService.captureError(error)
+      this.loggingService?.captureError(error)
       throw new Error(error);
     }
 
@@ -141,7 +141,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     if ('error' in deleted) {
       const {error} = deleted
       this.sendMessage(this.deleteErrorNotify(id), true);
-      this.loggingService.captureError(error)
+      this.loggingService?.captureError(error)
       throw new Error(error);
     }
 
@@ -164,7 +164,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     if ('error' in saved) {
       const {error} = saved
       this.sendMessage(this.saveErrorNotify(partialData), true);
-      this.loggingService.captureError(error)
+      this.loggingService?.captureError(error)
       throw new Error(error);
     }
 

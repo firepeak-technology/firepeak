@@ -19,6 +19,10 @@ export abstract class ItemState<Item, ID extends keyof Item> extends AbstractSta
     this.currentValue = updatedItem
   }
 
+  protected override createItem(item: Item ) {
+    this.updateData(item)
+    this.currentValue = item
+  }
   protected override deleteItem(id: Item[ID]) {
     this.updateData(null)
     this.currentValue = null
