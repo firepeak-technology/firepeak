@@ -7,7 +7,13 @@ interface ResizeElementParams {
   onResize: () => void;
 }
 interface ResizeIdParams {
+  /**
+   * Id of the htmlElement where the resizeObserver should listen to
+   */
   id: string;
+  /**
+   * Function that should be executed when resize occurs
+   */
   onResize: () => void;
 }
 type ResizeParams = ResizeElementParams | ResizeIdParams;
@@ -20,6 +26,11 @@ export class ResizeService {
 
   public constructor(private readonly zone: NgZone) {}
 
+  /**
+   *
+   * @param id - unique id for the resizeObservers, later it can be easily destroyed
+   * @param params
+   */
   public registerObserver(id: string, params: ResizeParams): void {
     this.destroy(id);
     const element =
