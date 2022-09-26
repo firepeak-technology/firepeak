@@ -45,7 +45,7 @@ jobs:
 
       - name: Test
         run: |
-          RUN=CI yarn nx run-many --target=test --all
+          RUN=CI yarn nx run-many --target=test --all -skip-tests
           yarn nx run-many --target=lint --all
 
       - name: Build components
