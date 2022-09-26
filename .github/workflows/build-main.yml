@@ -1,0 +1,22 @@
+name: Build main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
+
+      - run: npx nx workspace-lint
+      - run: npx nx run-many --target=lint --parallel=3 --all
+      - run: npx nx run-many --target=test --parallel=3 --all ---ci --code-coverage
+      - run: npx nx run-many --target=build --parallel=3 --all --prod
