@@ -1,6 +1,6 @@
 {
   "name": "@fp-tools/angular-resize",
-  "version": "0.0.1-beta-2",
+  "version": "14.0.0",
   "peerDependencies": {
     "@angular/common": ">= 14.0.0 < 15",
     "@angular/core": ">= 14.0.0 < 15"
