@@ -55,14 +55,27 @@ export class MyComponent {
 ## Use the service
 In some cases a non-angular library may have an issue with resizing. F.E. if you resize your window a map should be resized as wel, for some reason this is not the case and you should manual trigger the `map.resize()`. In this case it can be easily done with the ResizeService
 
+Don't forget to destroy the resize listener when you don't need it anymore. This may avoid memory-leaks
 ```typescript
+import { Injectable } from '@angular/core';
+import { ResizeService } from '@fp-tools/angular-resize';
 
-import { ResizeModule } from '@fp-tools/angular-resize';
+@Injectable({ providedIn: 'root' })
+export class MyService {
+  constructor(private readonly resizeService: ResizeService) {}
 
-@Injectable()
-class MyService{
-    
+  init() {
+    this.resizeService.registerObserver('myId', {
+      id: 'myId',
+      onResize: () => console.log('resize by the service'),
+    });
+  }
+
+  destroy() {
+    this.resizeService.destroy('myId');
+  }
 }
+
 ```
 
 # License
