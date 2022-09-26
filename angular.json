@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "angular-resize": "libs/angular/resize",
+    "angular-state": "libs/angular/state",
     "tools": "apps/tools",
     "tools-e2e": "apps/tools-e2e"
   }
