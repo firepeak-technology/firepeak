@@ -2,8 +2,8 @@ name: Publish
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main
 
 jobs:
   publish:
@@ -20,15 +20,8 @@ jobs:
       - run: npx nx run-many --target=lint --parallel=3 --all
       - run: npx nx run-many --target=test --parallel=3 --all ---ci --code-coverage
       - run: npx nx run-many --target=build --parallel=3 --all --prod
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./dist/libs/angular/resize/package.json
 
-      - name: Publish components (Github packages)
-        run: |
-          for LIBRARY in $(yarn nx affected:libs --base=$last_version --head=$current_version --plain | awk 'NR > 2 && $1 != "Done" { print $1 }')
-          do
-            cd ./dist/libs/$LIBRARY
-            npm publish --registry https://npm.pkg.github.com --no-git-tag-version --no-push --yes
-            cd ..
-            cd ..
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.NPM_TOKEN }}
