@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "angular-resize": "libs/angular/resize",
+    "tools": "apps/tools",
+    "tools-e2e": "apps/tools-e2e"
+  }
+}
