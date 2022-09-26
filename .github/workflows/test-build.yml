@@ -1,9 +1,9 @@
 name: Test and Build
 
 on:
-  pull_request:
-    branches:
-      - main
+  label:
+    types:
+      - release
 
 jobs:
   main:
