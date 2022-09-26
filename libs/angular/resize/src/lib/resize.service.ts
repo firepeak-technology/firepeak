@@ -33,7 +33,7 @@ export class ResizeService {
 
     this.resizeMap.set(
       id,
-      new ResizeListener(this.zone, element!, params.onResize)
+      new ResizeListener(this.zone, element, params.onResize)
     );
   }
 
