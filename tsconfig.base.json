@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@firepeak/angular-resize": ["libs/angular/resize/src/index.ts"],
+      "@fp-tools/angular-resize": ["libs/angular/resize/src/index.ts"],
       "@fp-tools/rxjs": ["libs/rxjs/utils/src/index.ts"]
     }
   },
