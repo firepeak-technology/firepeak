@@ -1,6 +1,6 @@
 {
   "name": "@fp-tools/rxjs",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "peerDependencies": {
     "rxjs": ">=6.0.0 && < 8.0.0"
   },
