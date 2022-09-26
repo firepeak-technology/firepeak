@@ -18,7 +18,7 @@ https://stackblitz.com/edit/fp-toolsangular-resize
  
 # HowTo use the library
 To install 
-`npm i @firepeak/angular-resize` or `yarn add @firepeak/angular-resize`
+`npm i @fp-tools/angular-resize` or `yarn add @fp-tools/angular-resize`
  
 
 ## Use the directive
