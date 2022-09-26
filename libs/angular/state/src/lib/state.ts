@@ -1,8 +1,8 @@
 // tslint:disable:no-any
 // tslint:disable:no-unsafe-any
-import { isEqual } from '@reibo/common/utils';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import {isEqual} from "./is-equal";
 
 type Reducer<T> = (state: T) => T;
 type Selector<T, R> = (state: T) => R;

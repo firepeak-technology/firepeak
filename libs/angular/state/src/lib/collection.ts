@@ -20,6 +20,9 @@ import {
   tap,
 } from 'rxjs/operators';
 import { makeState } from './state';
+import {LoggingService} from "./logging.service";
+import {SnackbarService} from "./snackbar.service";
+import {isEmpty} from "./is-empty";
 
 const enum Actions {
   LOAD = 'LOAD',
@@ -89,8 +92,8 @@ export abstract class Collection<Item extends WithId> implements OnDestroy {
   protected _destroy$ = new Subject<void>();
 
   protected constructor(
-    protected readonly _sentryService: SentryService,
-    protected readonly _snackbar?: SnackbarService,
+    protected readonly loggingService: LoggingService,
+    protected readonly snackbarService?: SnackbarService,
   ) {
     this.loading$ = this._state.select(state => state.status.loading);
     this.loaded$ = this._state.select(state => !state.status.loading);
@@ -181,7 +184,7 @@ export abstract class Collection<Item extends WithId> implements OnDestroy {
         ),
         tap(item => this._sendMessage(this._createNotify(item), false)),
         catchError(error => {
-          this._sentryService.captureError(error);
+          this.loggingService.captureError(error);
           this._changeStatus({ loadingSave: false, errorSave: true });
           this._sendMessage(this._createErrorNotify(partialData), true);
 
@@ -270,7 +273,7 @@ export abstract class Collection<Item extends WithId> implements OnDestroy {
         take(1),
         tap(() => this._changeStatus({ loadingSave: false, successSave: true })),
         catchError(error => {
-          this._sentryService.captureError(error);
+          this.loggingService?.captureError(error);
           this._changeStatus({ loadingSave: false, errorSave: true });
 
           return EMPTY;
@@ -294,24 +297,24 @@ export abstract class Collection<Item extends WithId> implements OnDestroy {
     throw Error('implement the create api');
   }
 
-  protected _createNotify(_item: Partial<Item>): string {
-    return undefined;
+  protected _createNotify(_item: Partial<Item>): string|null {
+    return null;
   }
 
-  protected _createErrorNotify(_item: Partial<Item>): string {
-    return undefined;
+  protected _createErrorNotify(_item: Partial<Item>): string |null{
+    return null;
   }
 
   protected _saveApi(_partialData: Partial<Item>): Observable<Item> {
     throw Error('implement the save api');
   }
 
-  protected _saveNotify(_item: Partial<Item>): string {
-    return undefined;
+  protected _saveNotify(_item: Partial<Item>): string |null{
+    return null;
   }
 
-  protected _saveErrorNotify(_item: Partial<Item>): string {
-    return undefined;
+  protected _saveErrorNotify(_item: Partial<Item>): string|null {
+    return null;
   }
 
   protected _saveAllApi(_list: Array<Partial<Item>>): Observable<Item[]> {
@@ -322,12 +325,12 @@ export abstract class Collection<Item extends WithId> implements OnDestroy {
     throw Error('implement the delete api');
   }
 
-  protected _deleteNotify(_id: number): string {
-    return undefined;
+  protected _deleteNotify(_id: number): string|null {
+    return null;
   }
 
-  protected _deleteErrorNotify(_id: number): string {
-    return undefined;
+  protected _deleteErrorNotify(_id: number): string|null {
+    return null;
   }
 
   protected _updateItem(item: Item) {
@@ -340,17 +343,17 @@ export abstract class Collection<Item extends WithId> implements OnDestroy {
   }
 
   protected _sendMessage(message: string | undefined, error: boolean) {
-    if (!this._snackbar || !message) {
+    if (!this.snackbarService || !message) {
       return;
     }
 
     if (error) {
-      this._snackbar.error(message);
+      this.snackbarService?.error(message);
 
       return;
     }
 
-    this._snackbar.success(message);
+    this.snackbarService?.success(message);
   }
 
   protected _deleteItem(id: number) {
