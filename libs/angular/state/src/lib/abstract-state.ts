@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {firstValueFrom, merge, Observable, of, ReplaySubject, Subject,} from 'rxjs';
-import {catchError, debounceTime, filter, switchMap, takeUntil, tap,} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap,} from 'rxjs/operators';
 import {makeState} from './state';
 import {LoggingService} from "./logging.service";
 import {SnackbarService} from "./snackbar.service";
@@ -11,7 +11,7 @@ const enum Actions {
 }
 
 interface State<Item> {
-  data?: Item | null;
+  data: Item | null;
   loading: LoadingStatus;
 }
 
@@ -27,6 +27,7 @@ const INITIALLOADINGSTATE = (loading: Partial<LoadingStatus> = {}): LoadingStatu
 
 function INITIALSTATE<T>(): State<T> {
   return {
+    data: null,
     loading: INITIALLOADINGSTATE()
   };
 }
@@ -39,7 +40,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   private readonly state = makeState<State<Item>>(INITIALSTATE());
 
   private readonly loadEffects$: Observable<unknown>;
-  private readonly data$ = this.state.select('data');
+  public readonly data$: Observable<Item | null> = this.state.select('data');
   protected destroy$ = new Subject<void>();
 
   protected abstract clearCurrentValue(): void;
@@ -188,12 +189,12 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   }
 
   protected selectData<KEY extends keyof Item>(key: KEY): Observable<Item[KEY] | null> {
-    return this.state.select(state => state['data'] ? state['data'][key] : null)
+    return this.state.select(state => state['data'] ? state['data'][key] : null).pipe(distinctUntilChanged())
   }
 
 
   protected selectLoading<KEY extends keyof LoadingStatus>(key: KEY): Observable<boolean> {
-    return this.state.select(state => state['loading'][key])
+    return this.state.select(state => state['loading'][key]).pipe(distinctUntilChanged())
   }
 
   protected updateData(data: Item | null) {
