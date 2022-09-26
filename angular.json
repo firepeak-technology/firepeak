@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "angular-resize": "libs/angular/resize",
+    "rxjs-utils": "libs/rxjs/utils",
     "tools": "apps/tools",
     "tools-e2e": "apps/tools-e2e"
   }
