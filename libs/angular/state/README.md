@@ -1,7 +1,12 @@
-# rxjs-state
+# Angular state
 
-This library was generated with [Nx](https://nx.dev).
+Angular 14 state library
 
-## Running unit tests
+# HowTo use the library
+To install
+`npm i @fp-tools/angular-state` or `yarn add @fp-tools/angular-state`
 
-Run `nx test rxjs-state` to execute the unit tests.
+ More information will come soon
+
+# License
+MIT © Bo Vandersteene
