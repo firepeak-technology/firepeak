@@ -1,0 +1,41 @@
+name: Release
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for PR title
+        runs-on: ubuntu-latest
+        steps:
+          - uses: deepakputhraya/action-pr-title@master
+            with:
+              regex: 'release: \w+' # Regex the title should match.
+              allowed_prefixes: 'release' # title should start with the given prefix
+              prefix_case_sensitive: false # title prefix are case insensitive
+              min_length: 5 # Min length of the title
+              max_length: 100 # Max length of the title
+          - uses: actions/labeler@main
+            with:
+              repo-token: '${{ secrets.GITHUB_TOKEN }}'
+              sync-labels: true
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Changelog
+        uses: scottbrenner/generate-changelog-action@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: true
+          prerelease: true
