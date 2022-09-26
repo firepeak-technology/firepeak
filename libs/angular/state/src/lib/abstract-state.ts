@@ -195,7 +195,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   }
 
   protected selectData<KEY extends keyof Item>(key: KEY): Observable<Item[KEY] | null> {
-    return this.state.select(state => state['data'] ? state['data'][key] : null);
+    return this.state.select(state => state['data'] ? state['data'][key] : null).pipe(distinctUntilChanged())
   }
 
 
@@ -209,13 +209,14 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     this.state.set(state => ({...state, data: data}));
   }
 
-  protected debugMessage(message?: any, ...optionalParams: any[]){
-    if(!this.debug){
+  protected debugMessage(message?: any, ...optionalParams: any[]) {
+    if (!this.debug) {
       return
     }
 
     console.log(`DEBUG STATE [${this.debugPrefix}]`, message, ...optionalParams)
   }
+
   protected abstract fetchApi(): Observable<Item>;
 
   protected createApi(partialData: Partial<SINGLEITEM>): Observable<SINGLEITEM> {
