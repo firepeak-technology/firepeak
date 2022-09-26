@@ -1,4 +1,6 @@
-# angular-resize
+# Angular resize util
+
+Angular 14 service and directive for detecting changes on an element size.
 
 To install 
 `npm i @firepeak/angular-resize` or `yarn add @firepeak/angular-resize`
