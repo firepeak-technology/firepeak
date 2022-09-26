@@ -128,7 +128,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     return saved;
   }
 
-  public async delete(id: ID)  {
+  public async delete(id: ID) {
 
     this.updateLoading({delete: true});
 
@@ -182,8 +182,12 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     this.state.set(state => ({...state, loading: {...state.loading, ...loading}}));
   }
 
-  protected getData(){
+  protected getData() {
     return this.state.get('data')
+  }
+
+  protected selectData<KEY extends keyof Item>(key: KEY): Observable<Item[KEY] | null> {
+    return this.state.select(state => state['data'] ? state['data'][key] : null)
   }
 
   protected updateData(data: Item | null) {

@@ -27,4 +27,8 @@ export abstract class ItemState<Item, ID extends keyof Item> extends AbstractSta
     this.updateData(null)
     this.currentValue = null
   }
+
+  public select(key: keyof Item){
+    return this.selectData(key)
+  }
 }
