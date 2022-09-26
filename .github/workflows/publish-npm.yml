@@ -24,8 +24,10 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./dist/libs/angular/resize/package.json
+          access: public
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
           package: ./dist/libs/angular/resize/package.json
+          access: public
 
