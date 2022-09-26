@@ -1,3 +1,5 @@
+[![Build main](https://github.com/firepeak-technology/firepeak/actions/workflows/build-main.yml/badge.svg)](https://github.com/firepeak-technology/firepeak/actions/workflows/build-main.yml)
+
 This is a monorepo with some angular and RxJs tools.
 
 More information will be added soon, for now 3 libraries are available
