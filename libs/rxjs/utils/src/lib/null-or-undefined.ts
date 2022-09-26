@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
-export function nullOrUndefined(value) {
+export function nullOrUndefined<T>(value: T | null | undefined) {
   return value === undefined || value === null;
 }
 
@@ -16,5 +16,5 @@ export function isNotNullOrUndefined<T>() {
 
 export function isNullOrUndefined<T>() {
   return (o: Observable<T | null | undefined>): Observable<null | undefined> =>
-    o.pipe(filter(nullOrUndefined));
+    o.pipe(filter(v => nullOrUndefined(v))) as Observable<null | undefined>;
 }

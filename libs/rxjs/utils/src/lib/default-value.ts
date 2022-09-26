@@ -14,4 +14,3 @@ export function valueOrDefault<T>(defaultValue: T, mapTo?: (value: any) => T) {
 }
 
 
-of([null, 'abc']).pipe(valueOrDefault(value => value, 'abc'))
