@@ -2,8 +2,8 @@ name: Publish
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main
 
 jobs:
   publish:
@@ -28,6 +28,11 @@ jobs:
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ./dist/libs/angular/resize/package.json
+          package: ./dist/libs/angular/state/package.json
+          access: public
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./dist/libs/rxjs/utils/package.json
           access: public
 
