@@ -35,6 +35,8 @@ function INITIALSTATE<T>(): State<T> {
 
 @Injectable()
 export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDestroy {
+  private readonly debug: boolean = false;
+  private readonly debugPrefix = ''
   private readonly actions$ = new ReplaySubject(1);
 
   private readonly state = makeState<State<Item>>(INITIALSTATE());
@@ -123,6 +125,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
       this.loggingService?.captureError(error)
       throw new Error(error);
     }
+    this.debugMessage('Create state', partialData)
 
     this.createItem(saved);
     this.sendMessage(this.createNotify(saved), false);
@@ -146,6 +149,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
       this.loggingService?.captureError(error)
       throw new Error(error);
     }
+    this.debugMessage('Delete state', id)
 
     this.deleteItem(id);
     this.sendMessage(this.deleteNotify(id), false);
@@ -170,6 +174,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
       throw new Error(error);
     }
 
+    this.debugMessage('Update state', saved)
     this.updateItem(saved);
     this.sendMessage(this.saveNotify(saved), false);
 
@@ -177,6 +182,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   }
 
   protected initCollection() {
+    this.debugMessage('init collection')
     merge(this.loadEffects$).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
@@ -198,9 +204,18 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   }
 
   protected updateData(data: Item | null) {
+
+    this.debugMessage('updateData', data)
     this.state.set(state => ({...state, data: data}));
   }
 
+  protected debugMessage(message?: any, ...optionalParams: any[]){
+    if(!this.debug){
+      return
+    }
+
+    console.log(`DEBUG STATE [${this.debugPrefix}]`, message, ...optionalParams)
+  }
   protected abstract fetchApi(): Observable<Item>;
 
   protected createApi(partialData: Partial<SINGLEITEM>): Observable<SINGLEITEM> {
