@@ -47,7 +47,6 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
 
   protected abstract setCurrentValue(item: Item): void;
 
-
   protected abstract createItem(item: SINGLEITEM): void;
 
   protected abstract updateItem(item: SINGLEITEM): void;
@@ -67,6 +66,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
       switchMap(() => this.fetchApi()),
       tap(item => {
         this.setCurrentValue(item);
+        this.updateData(item);
         this.updateLoading({data: false})
       }),
       catchError(error => {
