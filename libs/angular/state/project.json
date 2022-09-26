@@ -1,30 +1,30 @@
 {
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "libs/rxjs/state/src",
+  "sourceRoot": "libs/angular/state/src",
   "prefix": "firepeak",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:package",
-      "outputs": ["dist/libs/rxjs/state"],
+      "outputs": ["dist/libs/angular/state"],
       "options": {
-        "project": "libs/rxjs/state/ng-package.json"
+        "project": "libs/angular/state/ng-package.json"
       },
       "configurations": {
         "production": {
-          "tsConfig": "libs/rxjs/state/tsconfig.lib.prod.json"
+          "tsConfig": "libs/angular/state/tsconfig.lib.prod.json"
         },
         "development": {
-          "tsConfig": "libs/rxjs/state/tsconfig.lib.json"
+          "tsConfig": "libs/angular/state/tsconfig.lib.json"
         }
       },
       "defaultConfiguration": "production"
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/rxjs/state"],
+      "outputs": ["coverage/libs/angular/state"],
       "options": {
-        "jestConfig": "libs/rxjs/state/jest.config.ts",
+        "jestConfig": "libs/angular/state/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -32,8 +32,8 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "libs/rxjs/state/**/*.ts",
-          "libs/rxjs/state/**/*.html"
+          "libs/angular/state/**/*.ts",
+          "libs/angular/state/**/*.html"
         ]
       }
     }
