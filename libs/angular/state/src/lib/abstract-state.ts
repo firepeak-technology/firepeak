@@ -119,7 +119,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     });
     this.updateLoading({create: false});
 
-    if ('error' in saved) {
+    if (saved && 'error' in saved) {
       const {error} = saved
       this.sendMessage(this.createErrorNotify(partialData), true);
       this.loggingService?.captureError(error)
@@ -143,7 +143,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     });
     this.updateLoading({delete: false});
 
-    if ('error' in deleted) {
+    if (deleted && 'error' in deleted) {
       const {error} = deleted
       this.sendMessage(this.deleteErrorNotify(id), true);
       this.loggingService?.captureError(error)
@@ -167,7 +167,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     this.updateLoading({update: false});
 
 
-    if ('error' in saved) {
+    if (saved && 'error' in saved) {
       const {error} = saved
       this.sendMessage(this.saveErrorNotify(partialData), true);
       this.loggingService?.captureError(error)
