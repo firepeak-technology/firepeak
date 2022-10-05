@@ -113,7 +113,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   public async create(partialData: Partial<SINGLEITEM>) {
     this.updateLoading({create: true});
 
-    const saved = await firstValueFrom(this.saveApi(partialData)).catch(error => {
+    const saved = await firstValueFrom(this.createApi(partialData)).catch(error => {
       console.error(error)
       return {error: error}
     });

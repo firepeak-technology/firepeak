@@ -13,6 +13,7 @@ export abstract class Collection<Item, ID extends keyof Item> extends AbstractSt
 
 
   protected override setCurrentValue(items: Item[]) {
+    if(!items){this.currentValues.clear()}
     items.forEach(item =>
       this.currentValues.set(this.getId(item), item))
   }
