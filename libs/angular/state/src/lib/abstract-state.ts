@@ -194,6 +194,11 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     return this.state.get('data')
   }
 
+  protected get<KEY extends keyof Item>(key: KEY): Item[KEY] | null {
+    return this.state.get(state => state['data'] ? state['data'][key] : null)
+  }
+
+
   protected selectData<KEY extends keyof Item>(key: KEY): Observable<Item[KEY] | null> {
     return this.state.select(state => state['data'] ? state['data'][key] : null).pipe(distinctUntilChanged())
   }
