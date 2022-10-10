@@ -35,8 +35,8 @@ function INITIALSTATE<T>(): State<T> {
 
 @Injectable()
 export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDestroy {
-  private readonly debug: boolean = false;
-  private readonly debugPrefix = ''
+  private   debug: boolean = false;
+  private   debugPrefix = ''
   private readonly actions$ = new ReplaySubject(1);
 
   private readonly state = makeState<State<Item>>(INITIALSTATE());
@@ -54,6 +54,11 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   protected abstract updateItem(item: SINGLEITEM): void;
 
   protected abstract deleteItem(item: ID): void;
+
+  protected enableDebug(debugPrefix: string){
+    this.debug = true;
+    this.debugPrefix = debugPrefix
+  }
 
   protected constructor(
     protected readonly loggingService?: LoggingService,
