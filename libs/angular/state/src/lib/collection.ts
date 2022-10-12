@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AbstractState} from "./abstract-state";
+import {addCollectionItem, CollectionUtil, removeCollectionItem, updateCollectionItem} from "./utils";
 
 
 @Injectable()
@@ -18,32 +19,23 @@ export abstract class Collection<Item, ID extends keyof Item> extends AbstractSt
       this.currentValues.set(this.getId(item), item))
   }
 
-
-  private isId(id: Item[ID], item2: Item) {
-    return id === item2[this.idKey];
-  }
-
-  private isSameId(item1: Item, item2: Item) {
-    return item1[this.idKey] === item2[this.idKey];
-  }
-
   private getId(item: Item) {
     return item[this.idKey];
   }
 
   protected override createItem(item: Item) {
-    this.updateItems(items => [...items, item])
+    this.updateItems(items => addCollectionItem(  items, item))
     this.currentValues.set(this.getId(item), item);
   }
 
   protected override updateItem(updatedItem: Item) {
-    this.updateItems(items => items.map(item => this.isSameId(updatedItem, item) ? updatedItem : item))
+    this.updateItems(items => updateCollectionItem(this.idKey, items, updatedItem))
 
     this.currentValues.set(this.getId(updatedItem), updatedItem);
   }
 
   protected override deleteItem(id: Item[ID]) {
-    this.updateItems(items => items.filter(item => this.isId(id, item)))
+    this.updateItems(items => removeCollectionItem(this.idKey,items, id))
     this.currentValues.delete(id);
   }
 
