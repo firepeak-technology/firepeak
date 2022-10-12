@@ -107,7 +107,6 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
   }
 
   public reload() {
-    this.reset();
     this.load();
   }
 
