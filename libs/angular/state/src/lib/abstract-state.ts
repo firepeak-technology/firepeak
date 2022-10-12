@@ -35,8 +35,8 @@ function INITIALSTATE<T>(): State<T> {
 
 @Injectable()
 export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDestroy {
-  private   debug: boolean = false;
-  private   debugPrefix = ''
+  private debug = false;
+  private debugPrefix = ''
   private readonly actions$ = new ReplaySubject(1);
 
   private readonly state = makeState<State<Item>>(INITIALSTATE());
@@ -55,7 +55,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
 
   protected abstract deleteItem(item: ID): void;
 
-  protected enableDebug(debugPrefix: string){
+  protected enableDebug(debugPrefix: string) {
     this.debug = true;
     this.debugPrefix = debugPrefix
   }
@@ -123,7 +123,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     });
     this.updateLoading({create: false});
 
-    if (saved && typeof saved ==='object' && 'error' in saved) {
+    if (saved && typeof saved === 'object' && 'error' in saved) {
       const {error} = saved
       this.sendMessage(this.createErrorNotify(partialData), true);
       this.loggingService?.captureError(error)
@@ -147,7 +147,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     });
     this.updateLoading({delete: false});
 
-    if (deleted && typeof deleted ==='object' && 'error' in deleted) {
+    if (deleted && typeof deleted === 'object' && 'error' in deleted) {
       const {error} = deleted
       this.sendMessage(this.deleteErrorNotify(id), true);
       this.loggingService?.captureError(error)
@@ -171,7 +171,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     this.updateLoading({update: false});
 
 
-    if (saved && typeof saved ==='object' && 'error' in saved) {
+    if (saved && typeof saved === 'object' && 'error' in saved) {
       const {error} = saved
       this.sendMessage(this.saveErrorNotify(partialData), true);
       this.loggingService?.captureError(error)
