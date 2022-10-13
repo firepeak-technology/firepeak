@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AbstractState} from "./abstract-state";
-import {addCollectionItem, CollectionUtil, removeCollectionItem, updateCollectionItem} from "./utils";
+import {addCollectionItem, removeCollectionItem, updateCollectionItem} from "./utils";
 
 
 @Injectable()
@@ -14,7 +14,9 @@ export abstract class Collection<Item, ID extends keyof Item> extends AbstractSt
 
 
   protected override setCurrentValue(items: Item[]) {
-    if(!items){this.currentValues.clear()}
+    if (!items) {
+      this.currentValues.clear()
+    }
     items.forEach(item =>
       this.currentValues.set(this.getId(item), item))
   }
@@ -24,7 +26,7 @@ export abstract class Collection<Item, ID extends keyof Item> extends AbstractSt
   }
 
   protected override createItem(item: Item) {
-    this.updateItems(items => addCollectionItem(  items, item))
+    this.updateItems(items => addCollectionItem(items, item))
     this.currentValues.set(this.getId(item), item);
   }
 
@@ -35,7 +37,7 @@ export abstract class Collection<Item, ID extends keyof Item> extends AbstractSt
   }
 
   protected override deleteItem(id: Item[ID]) {
-    this.updateItems(items => removeCollectionItem(this.idKey,items, id))
+    this.updateItems(items => removeCollectionItem(this.idKey, items, id))
     this.currentValues.delete(id);
   }
 
