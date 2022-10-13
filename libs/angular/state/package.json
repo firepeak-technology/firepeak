@@ -1,6 +1,6 @@
 {
   "name": "@fp-tools/angular-state",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "peerDependencies": {
     "@angular/common": "^14.2.0",
     "@angular/core": "^14.2.0",

@@ -114,10 +114,10 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     this.destroy$.next();
   }
 
-  public async create(partialData: Partial<SINGLEITEM>) {
+  public async create(partialData: Partial<SINGLEITEM>, ...extraParams: any) {
     this.updateLoading({create: true});
 
-    const saved = await firstValueFrom(this.createApi(partialData)).catch(error => {
+    const saved = await firstValueFrom(this.createApi(partialData, extraParams)).catch(error => {
       console.error(error)
       return {error: error}
     });
@@ -137,11 +137,11 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     return saved;
   }
 
-  public async delete(id: ID) {
+  public async delete(id: ID,  ...extraParams: any) {
 
     this.updateLoading({delete: true});
 
-    const deleted = await firstValueFrom(this.deleteApi(id)).catch(error => {
+    const deleted = await firstValueFrom(this.deleteApi(id,extraParams)).catch(error => {
       console.error(error)
       return {error}
     });
@@ -161,10 +161,10 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     return id;
   }
 
-  public async save(partialData: Partial<SINGLEITEM>) {
+  public async save(partialData: Partial<SINGLEITEM>,  ...extraParams: any) {
     this.updateLoading({update: true});
 
-    const saved = await firstValueFrom(this.saveApi(partialData)).catch(error => {
+    const saved = await firstValueFrom(this.saveApi(partialData, extraParams)).catch(error => {
       console.error(error)
       return {error}
     });
@@ -226,21 +226,21 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     console.log(`DEBUG STATE [${this.debugPrefix}]`, message, ...optionalParams)
   }
 
-  protected abstract fetchApi(): Observable<Item>;
+  protected abstract fetchApi( ): Observable<Item>;
 
-  protected createApi(partialData: Partial<SINGLEITEM>): Observable<SINGLEITEM> {
+  protected createApi(partialData: Partial<SINGLEITEM>,  ...extraParams: any): Observable<SINGLEITEM> {
     throw Error('implement the create api');
   }
 
-  protected createNotify(item: Partial<SINGLEITEM>): string | null {
+  protected createNotify(item: Partial<SINGLEITEM> ): string | null {
     return null;
   }
 
-  protected createErrorNotify(item: Partial<SINGLEITEM>): string | null {
+  protected createErrorNotify(item: Partial<SINGLEITEM> ): string | null {
     return null;
   }
 
-  protected saveApi(partialData: Partial<SINGLEITEM>): Observable<SINGLEITEM> {
+  protected saveApi(partialData: Partial<SINGLEITEM>,  ...extraParams: any): Observable<SINGLEITEM> {
     throw Error('implement the save api');
   }
 
@@ -252,7 +252,7 @@ export abstract class AbstractState<Item, ID, SINGLEITEM = Item> implements OnDe
     return null;
   }
 
-  protected deleteApi(id: ID): Observable<SINGLEITEM | ID> {
+  protected deleteApi(id: ID,  ...extraParams: any): Observable<SINGLEITEM | ID> {
     throw Error('implement the delete api');
   }
 
