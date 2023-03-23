@@ -1,42 +1,40 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/angular/state/src",
-  "prefix": "firepeak",
-  "targets": {
-    "build": {
-      "executor": "@nrwl/angular:package",
-      "outputs": ["dist/libs/angular/state"],
-      "options": {
-        "project": "libs/angular/state/ng-package.json"
-      },
-      "configurations": {
-        "production": {
-          "tsConfig": "libs/angular/state/tsconfig.lib.prod.json"
+    "name": "angular-state",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/angular/state/src",
+    "prefix": "firepeak",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/angular:package",
+            "outputs": ["{workspaceRoot}/dist/libs/angular/state"],
+            "options": {
+                "project": "libs/angular/state/ng-package.json"
+            },
+            "configurations": {
+                "production": {
+                    "tsConfig": "libs/angular/state/tsconfig.lib.prod.json"
+                },
+                "development": {
+                    "tsConfig": "libs/angular/state/tsconfig.lib.json"
+                }
+            },
+            "defaultConfiguration": "production"
         },
-        "development": {
-          "tsConfig": "libs/angular/state/tsconfig.lib.json"
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/angular/state"],
+            "options": {
+                "jestConfig": "libs/angular/state/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": ["libs/angular/state/**/*.ts", "libs/angular/state/**/*.html"]
+            }
         }
-      },
-      "defaultConfiguration": "production"
     },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/angular/state"],
-      "options": {
-        "jestConfig": "libs/angular/state/jest.config.ts",
-        "passWithNoTests": true
-      }
-    },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/angular/state/**/*.ts",
-          "libs/angular/state/**/*.html"
-        ]
-      }
-    }
-  },
-  "tags": []
+    "tags": []
 }

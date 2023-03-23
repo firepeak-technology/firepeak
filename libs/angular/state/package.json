@@ -1,12 +1,12 @@
 {
-  "name": "@fp-tools/angular-state",
-  "version": "0.0.9",
-  "peerDependencies": {
-    "@angular/common": "^14.2.0",
-    "@angular/core": "^14.2.0",
-    "rxjs": ">=6.0.0 && < 8.0.0"
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  }
+    "name": "@fp-tools/angular-state",
+    "version": "15.0.0",
+    "peerDependencies": {
+        "@angular/common": ">= 15.0.0 < 16",
+        "@angular/core": ">= 15.0.0 < 16",
+        "rxjs": ">=6.0.0 && < 8.0.0"
+    },
+    "dependencies": {
+        "tslib": "^2.3.0"
+    }
 }

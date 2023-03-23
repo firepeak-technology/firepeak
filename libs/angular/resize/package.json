@@ -1,12 +1,12 @@
 {
-  "name": "@fp-tools/angular-resize",
-  "version": "14.0.0",
-  "peerDependencies": {
-    "@angular/common": ">= 14.0.0 < 15",
-    "@angular/core": ">= 14.0.0 < 15"
-  },
-  "dependencies": {
-    "tslib": "^2.3.0",
-    "uuid": "^9.0.0"
-  }
+    "name": "@fp-tools/angular-resize",
+    "version": "15.0.0",
+    "peerDependencies": {
+        "@angular/common": ">= 15.0.0 < 16",
+        "@angular/core": ">= 15.0.0 < 16"
+    },
+    "dependencies": {
+        "tslib": "^2.3.0",
+        "uuid": "^9.0.0"
+    }
 }

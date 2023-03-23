@@ -1,24 +1,27 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2017", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@fp-tools/angular-resize": ["libs/angular/resize/src/index.ts"],
-      "@fp-tools/angular-state": ["libs/angular/state/src/index.ts"],
-      "@fp-tools/rxjs": ["libs/rxjs/utils/src/index.ts"]
-    }
-  },
-  "exclude": ["node_modules", "tmp"]
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "module": "esnext",
+        "lib": ["es2017", "dom"],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@fp-tools/angular-resize": ["libs/angular/resize/src/index.ts"],
+            "@fp-tools/angular-state": ["libs/angular/state/src/index.ts"],
+            "@fp-tools/rxjs": ["libs/rxjs/utils/src/index.ts"]
+        }
+    },
+    "angularCompilerOptions": {
+        "disableTypeScriptVersionCheck": true
+    },
+    "exclude": ["node_modules", "tmp"]
 }
