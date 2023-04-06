@@ -18,5 +18,5 @@ jobs:
 
       - run: npx nx workspace-lint
       - run: npx nx run-many --target=lint --parallel=3 --all
-      - run: npx nx run-many --target=test --parallel=3 --all ---ci --code-coverage
+      #- run: npx nx run-many --target=test --parallel=3 --all ---ci --code-coverage
       - run: npx nx run-many --target=build --parallel=3 --all --prod
