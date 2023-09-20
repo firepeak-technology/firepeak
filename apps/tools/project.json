@@ -71,13 +71,13 @@
             }
         },
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "executor": "@nx/linter:eslint",
             "options": {
                 "lintFilePatterns": ["apps/tools/**/*.ts", "apps/tools/**/*.html"]
             }
         },
         "test": {
-            "executor": "@nrwl/jest:jest",
+            "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/apps/tools"],
             "options": {
                 "jestConfig": "apps/tools/jest.config.ts",
